@@ -57,7 +57,7 @@
 
     <!-- LEFT: generalised SfM pipeline -->
     <div class="left">
-      <div class="sec-label">Structure from Motion (SfM) — generalised pipeline</div>
+      <div class="sec-label">Structure from Motion (SfM)</div>
 
       <div class="pipe">
 
@@ -78,7 +78,7 @@
               <rect x="36" y="38" width="14" height="9" rx="1" fill="#fff59d"/>
             </svg>
           </div>
-          <div class="step-bot">2D frames<br>+ known camera info</div>
+          <div class="step-bot">2D frames</div>
         </div>
 
         <div class="arr"><svg width="20" height="14"><path d="M2 7 L14 7 M9 2 L14 7 L9 12" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -136,7 +136,7 @@
 
         <!-- Step 4: Pose solving -->
         <div class="step">
-          <div class="step-top">Pose solving<br>+ optimisation</div>
+          <div class="step-top">Pose estimation<br>+ triangulation</div>
           <div class="icon-wrap">
             <svg width="64" height="64" viewBox="0 0 64 64">
               <circle cx="32" cy="32" r="18" fill="none" stroke="#e0e0e0" stroke-width="1" stroke-dasharray="3 2"/>
@@ -153,7 +153,7 @@
               <text x="32" y="62" text-anchor="middle" font-size="7" fill="#888">bundle adjustment</text>
             </svg>
           </div>
-          <div class="step-bot">Recover R, t per<br>camera · minimise reprojection</div>
+          <div class="step-bot">Recover R, t per<br>camera and minimise reprojection</div>
         </div>
 
         <div class="arr"><svg width="20" height="14"><path d="M2 7 L14 7 M9 2 L14 7 L9 12" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -182,11 +182,11 @@
               <circle cx="55" cy="56" r="2" fill="#888"/>
             </svg>
           </div>
-          <div class="step-bot">3D camera network<br>for scene training</div>
+          <div class="step-bot">Sparse 3D point cloud <br>+ camera poses for scene training</div>
         </div>
 
       </div>
-      <div class="sec-caption">SfM reconstructs camera positions and orientations from overlapping 2D images — output camera poses feed directly into 3D scene training.</div>
+      <div class="sec-caption">SfM reconstructs camera positions and orientations from overlapping 2D images - output camera poses feed directly into 3D scene training.</div>
     </div>
 
     <!-- RIGHT: COLMAP vs GLOMAP -->
