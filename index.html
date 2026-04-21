@@ -1,0 +1,241 @@
+
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+.slide{background:#fff;font-family:"Helvetica Neue",Arial,sans-serif;width:100%;padding:26px 36px 20px 36px;position:relative;}
+.title{color:#c0392b;font-size:1.55em;font-weight:800;margin-bottom:16px;}
+.red-bar{height:4px;background:#c0392b;margin-top:16px;}
+.minimap{position:absolute;top:20px;right:28px;display:flex;align-items:center;gap:3px;}
+.mbox{border:1px solid #bbb;border-radius:5px;padding:3px 6px;font-size:6.5px;color:#666;text-align:center;background:#fff;line-height:1.3;min-width:52px;}
+.mbox.active{border:2px solid #c0392b;color:#c0392b;font-weight:700;}
+.marr{font-size:8px;color:#bbb;}
+
+.main{display:flex;gap:24px;align-items:flex-start;}
+
+/* LEFT: SfM pipeline */
+.left{flex:1.5;display:flex;flex-direction:column;}
+.sec-label{font-size:0.72em;font-weight:700;color:#333;margin-bottom:10px;letter-spacing:0.01em;}
+.pipe{display:flex;align-items:flex-end;justify-content:flex-start;gap:0;}
+.step{display:flex;flex-direction:column;align-items:center;width:100px;}
+.step-top{font-size:0.6em;color:#444;text-align:center;min-height:26px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:5px;line-height:1.3;}
+.icon-wrap{width:64px;height:64px;display:flex;align-items:center;justify-content:center;}
+.step-bot{font-size:0.56em;color:#888;text-align:center;min-height:24px;display:flex;align-items:flex-start;justify-content:center;margin-top:4px;line-height:1.3;}
+.arr{display:flex;align-items:center;padding-bottom:26px;}
+.sec-caption{font-size:0.6em;color:#666;font-style:italic;margin-top:10px;line-height:1.5;}
+
+/* RIGHT: comparison */
+.right{width:240px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;}
+.comp-title{font-size:0.7em;font-weight:700;color:#333;margin-bottom:2px;}
+.comp-box{border-radius:12px;padding:11px 13px;border:1.5px solid #ddd;}
+.comp-box.colmap{border-color:#aaa;background:#fafafa;}
+.comp-box.glomap{border-color:#1D9E75;background:#f4fcf8;}
+.comp-box-title{font-size:0.68em;font-weight:700;color:#333;margin-bottom:5px;}
+.comp-box.glomap .comp-box-title{color:#0F6E56;}
+.comp-row{display:flex;gap:6px;align-items:flex-start;margin-bottom:3px;}
+.comp-icon{width:13px;height:13px;flex-shrink:0;margin-top:1px;}
+.comp-text{font-size:0.58em;color:#555;line-height:1.4;}
+.builds-on{display:flex;align-items:center;justify-content:center;gap:6px;font-size:0.6em;color:#888;padding:2px 0;}
+.builds-tag{background:#1D9E75;color:#fff;border-radius:4px;padding:1px 7px;font-size:0.95em;font-weight:600;}
+</style>
+
+<div class="slide">
+  <div class="title">Pose Estimation via GLOMAP</div>
+
+  <div class="minimap">
+    <div class="mbox">Data Collection<br><span style="font-size:5.5px">Video Capture +<br>Frame Extraction</span></div>
+    <div class="marr">→</div>
+    <div class="mbox active">Pose Estimation<br><span style="font-size:5.5px">via GLOMAP</span></div>
+    <div class="marr">→</div>
+    <div class="mbox">Training<br><span style="font-size:5.5px">3D Neural Rendering</span></div>
+    <div class="marr">→</div>
+    <div class="mbox">Final Geometry<br><span style="font-size:5.5px">Geometry Extraction</span></div>
+    <div class="marr">→</div>
+    <div class="mbox">Quantitative<br>Analysis</div>
+  </div>
+
+  <div class="main">
+
+    <!-- LEFT: generalised SfM pipeline -->
+    <div class="left">
+      <div class="sec-label">Structure from Motion (SfM) — generalised pipeline</div>
+
+      <div class="pipe">
+
+        <!-- Step 1: Images -->
+        <div class="step">
+          <div class="step-top">Input images</div>
+          <div class="icon-wrap">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+              <rect x="4" y="10" width="22" height="17" rx="3" fill="#e8f5e9" stroke="#aaa" stroke-width="1.2"/>
+              <rect x="8" y="14" width="14" height="9" rx="1" fill="#c8e6c9"/>
+              <rect x="20" y="18" width="22" height="17" rx="3" fill="#e3f2fd" stroke="#aaa" stroke-width="1.2"/>
+              <rect x="24" y="22" width="14" height="9" rx="1" fill="#bbdefb"/>
+              <rect x="36" y="10" width="22" height="17" rx="3" fill="#fce4ec" stroke="#aaa" stroke-width="1.2"/>
+              <rect x="40" y="14" width="14" height="9" rx="1" fill="#f8bbd0"/>
+              <rect x="10" y="34" width="22" height="17" rx="3" fill="#f3e5f5" stroke="#aaa" stroke-width="1.2"/>
+              <rect x="14" y="38" width="14" height="9" rx="1" fill="#e1bee7"/>
+              <rect x="32" y="34" width="22" height="17" rx="3" fill="#fff9c4" stroke="#aaa" stroke-width="1.2"/>
+              <rect x="36" y="38" width="14" height="9" rx="1" fill="#fff59d"/>
+            </svg>
+          </div>
+          <div class="step-bot">2D frames<br>+ known camera info</div>
+        </div>
+
+        <div class="arr"><svg width="20" height="14"><path d="M2 7 L14 7 M9 2 L14 7 L9 12" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+        <!-- Step 2: Feature detection -->
+        <div class="step">
+          <div class="step-top">Feature<br>detection</div>
+          <div class="icon-wrap">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+              <rect x="8" y="10" width="48" height="36" rx="4" fill="#f5f5f5" stroke="#ccc" stroke-width="1.2"/>
+              <rect x="13" y="15" width="38" height="26" rx="2" fill="#eee"/>
+              <circle cx="22" cy="25" r="4" fill="none" stroke="#c0392b" stroke-width="1.2"/>
+              <line x1="22" y1="21" x2="22" y2="29" stroke="#c0392b" stroke-width="0.9"/>
+              <line x1="18" y1="25" x2="26" y2="25" stroke="#c0392b" stroke-width="0.9"/>
+              <circle cx="38" cy="20" r="4" fill="none" stroke="#c0392b" stroke-width="1.2"/>
+              <line x1="38" y1="16" x2="38" y2="24" stroke="#c0392b" stroke-width="0.9"/>
+              <line x1="34" y1="20" x2="42" y2="20" stroke="#c0392b" stroke-width="0.9"/>
+              <circle cx="30" cy="33" r="3.5" fill="none" stroke="#c0392b" stroke-width="1"/>
+              <line x1="30" y1="30" x2="30" y2="36" stroke="#c0392b" stroke-width="0.8"/>
+              <line x1="27" y1="33" x2="33" y2="33" stroke="#c0392b" stroke-width="0.8"/>
+              <circle cx="48" cy="29" r="3" fill="none" stroke="#c0392b" stroke-width="1"/>
+              <text x="32" y="56" text-anchor="middle" font-size="7" fill="#888">SIFT keypoints</text>
+            </svg>
+          </div>
+          <div class="step-bot">Detect distinctive<br>keypoints per image</div>
+        </div>
+
+        <div class="arr"><svg width="20" height="14"><path d="M2 7 L14 7 M9 2 L14 7 L9 12" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+        <!-- Step 3: Matching -->
+        <div class="step">
+          <div class="step-top">Feature<br>matching</div>
+          <div class="icon-wrap">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+              <rect x="4" y="10" width="22" height="16" rx="3" fill="#e8f5e9" stroke="#aaa" stroke-width="1"/>
+              <rect x="38" y="10" width="22" height="16" rx="3" fill="#e3f2fd" stroke="#aaa" stroke-width="1"/>
+              <circle cx="15" cy="16" r="2.5" fill="#c0392b" opacity="0.8"/>
+              <circle cx="15" cy="22" r="2.5" fill="#e67e22" opacity="0.8"/>
+              <circle cx="49" cy="14" r="2.5" fill="#c0392b" opacity="0.8"/>
+              <circle cx="49" cy="21" r="2.5" fill="#e67e22" opacity="0.8"/>
+              <line x1="17.5" y1="16" x2="46.5" y2="14" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 2"/>
+              <line x1="17.5" y1="22" x2="46.5" y2="21" stroke="#e67e22" stroke-width="1" stroke-dasharray="3 2"/>
+              <rect x="4" y="36" width="22" height="16" rx="3" fill="#fce4ec" stroke="#aaa" stroke-width="1"/>
+              <rect x="38" y="36" width="22" height="16" rx="3" fill="#f3e5f5" stroke="#aaa" stroke-width="1"/>
+              <circle cx="15" cy="42" r="2.5" fill="#8e44ad" opacity="0.8"/>
+              <circle cx="49" cy="44" r="2.5" fill="#8e44ad" opacity="0.8"/>
+              <line x1="17.5" y1="42" x2="46.5" y2="44" stroke="#8e44ad" stroke-width="1" stroke-dasharray="3 2"/>
+              <text x="32" y="62" text-anchor="middle" font-size="7" fill="#888">cross-image pairs</text>
+            </svg>
+          </div>
+          <div class="step-bot">Match keypoints<br>across image pairs</div>
+        </div>
+
+        <div class="arr"><svg width="20" height="14"><path d="M2 7 L14 7 M9 2 L14 7 L9 12" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+        <!-- Step 4: Pose solving -->
+        <div class="step">
+          <div class="step-top">Pose solving<br>+ optimisation</div>
+          <div class="icon-wrap">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="18" fill="none" stroke="#e0e0e0" stroke-width="1" stroke-dasharray="3 2"/>
+              <polygon points="32,12 27,20 37,20" fill="none" stroke="#555" stroke-width="1.2"/>
+              <circle cx="32" cy="12" r="2.5" fill="#555"/>
+              <polygon points="50,32 42,27 42,37" fill="none" stroke="#555" stroke-width="1.2"/>
+              <circle cx="50" cy="32" r="2.5" fill="#555"/>
+              <polygon points="32,52 27,44 37,44" fill="none" stroke="#555" stroke-width="1.2"/>
+              <circle cx="32" cy="52" r="2.5" fill="#555"/>
+              <polygon points="14,32 22,27 22,37" fill="none" stroke="#555" stroke-width="1.2"/>
+              <circle cx="14" cy="32" r="2.5" fill="#555"/>
+              <circle cx="32" cy="32" r="4" fill="#fff" stroke="#555" stroke-width="1"/>
+              <circle cx="32" cy="32" r="2" fill="#555"/>
+              <text x="32" y="62" text-anchor="middle" font-size="7" fill="#888">bundle adjustment</text>
+            </svg>
+          </div>
+          <div class="step-bot">Recover R, t per<br>camera · minimise reprojection</div>
+        </div>
+
+        <div class="arr"><svg width="20" height="14"><path d="M2 7 L14 7 M9 2 L14 7 L9 12" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+        <!-- Step 5: output -->
+        <div class="step">
+          <div class="step-top">Sparse point cloud<br>+ camera poses</div>
+          <div class="icon-wrap">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+              <circle cx="32" cy="18" r="3" fill="#555" opacity="0.7"/>
+              <circle cx="22" cy="26" r="2.5" fill="#555" opacity="0.6"/>
+              <circle cx="42" cy="24" r="2.5" fill="#555" opacity="0.6"/>
+              <circle cx="18" cy="36" r="2" fill="#555" opacity="0.5"/>
+              <circle cx="36" cy="34" r="3" fill="#555" opacity="0.65"/>
+              <circle cx="48" cy="32" r="2" fill="#555" opacity="0.5"/>
+              <circle cx="26" cy="44" r="2" fill="#555" opacity="0.5"/>
+              <circle cx="44" cy="44" r="2.5" fill="#555" opacity="0.55"/>
+              <circle cx="32" cy="50" r="2" fill="#555" opacity="0.5"/>
+              <polygon points="9,8 3,20 15,20" fill="none" stroke="#888" stroke-width="1"/>
+              <circle cx="9" cy="8" r="2" fill="#888"/>
+              <polygon points="55,10 49,22 61,22" fill="none" stroke="#888" stroke-width="1"/>
+              <circle cx="55" cy="10" r="2" fill="#888"/>
+              <polygon points="9,56 3,44 15,44" fill="none" stroke="#888" stroke-width="1"/>
+              <circle cx="9" cy="56" r="2" fill="#888"/>
+              <polygon points="55,56 49,44 61,44" fill="none" stroke="#888" stroke-width="1"/>
+              <circle cx="55" cy="56" r="2" fill="#888"/>
+            </svg>
+          </div>
+          <div class="step-bot">3D camera network<br>for scene training</div>
+        </div>
+
+      </div>
+      <div class="sec-caption">SfM reconstructs camera positions and orientations from overlapping 2D images — output camera poses feed directly into 3D scene training.</div>
+    </div>
+
+    <!-- RIGHT: COLMAP vs GLOMAP -->
+    <div class="right">
+      <div class="comp-title">How COLMAP &amp; GLOMAP differ</div>
+
+      <div class="comp-box colmap">
+        <div class="comp-box-title">COLMAP — sequential SfM</div>
+        <div class="comp-row">
+          <svg class="comp-icon" viewBox="0 0 13 13"><circle cx="3" cy="6.5" r="2" fill="#aaa"/><circle cx="7" cy="6.5" r="2" fill="#bbb"/><circle cx="11" cy="6.5" r="2" fill="#ccc"/></svg>
+          <div class="comp-text">Registers one image at a time</div>
+        </div>
+        <div class="comp-row">
+          <svg class="comp-icon" viewBox="0 0 13 13"><path d="M2 11 L6 2 L10 11" fill="none" stroke="#e67e22" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <div class="comp-text">Bundle adjustment after every new image</div>
+        </div>
+        <div class="comp-row">
+          <svg class="comp-icon" viewBox="0 0 13 13"><rect x="2" y="4" width="9" height="5" rx="1" fill="none" stroke="#c0392b" stroke-width="1.2"/><line x1="6.5" y1="4" x2="6.5" y2="2" stroke="#c0392b" stroke-width="1"/></svg>
+          <div class="comp-text">Slow — O(n²) complexity, drift-prone</div>
+        </div>
+      </div>
+
+      <div class="builds-on">
+        <span style="color:#aaa;">GLOMAP extends COLMAP</span>
+        <span class="builds-tag">global ↓</span>
+      </div>
+
+      <div class="comp-box glomap">
+        <div class="comp-box-title">GLOMAP — global SfM</div>
+        <div class="comp-row">
+          <svg class="comp-icon" viewBox="0 0 13 13"><circle cx="6.5" cy="6.5" r="4.5" fill="none" stroke="#1D9E75" stroke-width="1.2"/><circle cx="6.5" cy="2" r="1.5" fill="#1D9E75"/><circle cx="11" cy="6.5" r="1.5" fill="#1D9E75"/><circle cx="2" cy="6.5" r="1.5" fill="#1D9E75"/></svg>
+          <div class="comp-text">Solves <em>all</em> camera poses simultaneously</div>
+        </div>
+        <div class="comp-row">
+          <svg class="comp-icon" viewBox="0 0 13 13"><path d="M2 9 Q6.5 2 11 9" fill="none" stroke="#1D9E75" stroke-width="1.2"/><circle cx="6.5" cy="5" r="1.5" fill="#1D9E75"/></svg>
+          <div class="comp-text">Global rotation averaging → translation solving</div>
+        </div>
+        <div class="comp-row">
+          <svg class="comp-icon" viewBox="0 0 13 13"><rect x="2" y="4" width="9" height="5" rx="1" fill="#e8f5f1" stroke="#1D9E75" stroke-width="1.2"/><line x1="6.5" y1="4" x2="6.5" y2="2" stroke="#1D9E75" stroke-width="1"/></svg>
+          <div class="comp-text">Single bundle adjustment pass — 10–100× faster</div>
+        </div>
+        <div class="comp-row">
+          <svg class="comp-icon" viewBox="0 0 13 13"><path d="M2 6.5 L5 9.5 L11 3.5" fill="none" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="comp-text">More robust, less drift in large scenes</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="red-bar"></div>
+</div>
