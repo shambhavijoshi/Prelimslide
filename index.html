@@ -1,44 +1,942 @@
 
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Combined Slides</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-.slide{background:#fff;font-family:"Helvetica Neue",Arial,sans-serif;width:100%;padding:26px 36px 20px 36px;position:relative;}
-.title{color:#c0392b;font-size:1.55em;font-weight:800;margin-bottom:16px;}
-.red-bar{height:4px;background:#c0392b;margin-top:16px;}
-.minimap{position:absolute;top:20px;right:28px;display:flex;align-items:center;gap:3px;}
-.mbox{border:1px solid #bbb;border-radius:5px;padding:3px 6px;font-size:6.5px;color:#666;text-align:center;background:#fff;line-height:1.3;min-width:52px;}
-.mbox.active{border:2px solid #c0392b;color:#c0392b;font-weight:700;}
-.marr{font-size:8px;color:#bbb;}
 
-.main{display:flex;gap:24px;align-items:flex-start;}
+/* ══════════════════════════════════════════
+   GLOBAL RESET & BASE
+══════════════════════════════════════════ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-/* LEFT: SfM pipeline */
-.left{flex:1.5;display:flex;flex-direction:column;}
-.sec-label{font-size:0.72em;font-weight:700;color:#333;margin-bottom:10px;letter-spacing:0.01em;}
-.pipe{display:flex;align-items:flex-end;justify-content:flex-start;gap:0;}
-.step{display:flex;flex-direction:column;align-items:center;width:100px;}
-.step-top{font-size:0.6em;color:#444;text-align:center;min-height:26px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:5px;line-height:1.3;}
-.icon-wrap{width:64px;height:64px;display:flex;align-items:center;justify-content:center;}
-.step-bot{font-size:0.56em;color:#888;text-align:center;min-height:24px;display:flex;align-items:flex-start;justify-content:center;margin-top:4px;line-height:1.3;}
-.arr{display:flex;align-items:center;padding-bottom:26px;}
-.sec-caption{font-size:0.6em;color:#666;font-style:italic;margin-top:10px;line-height:1.5;}
+body {
+  background: #f0f0f0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  padding: 40px 24px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-/* RIGHT: comparison */
-.right{width:240px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;}
-.comp-title{font-size:0.7em;font-weight:700;color:#333;margin-bottom:2px;}
-.comp-box{border-radius:12px;padding:11px 13px;border:1.5px solid #ddd;}
-.comp-box.colmap{border-color:#aaa;background:#fafafa;}
-.comp-box.glomap{border-color:#1D9E75;background:#f4fcf8;}
-.comp-box-title{font-size:0.68em;font-weight:700;color:#333;margin-bottom:5px;}
-.comp-box.glomap .comp-box-title{color:#0F6E56;}
-.comp-row{display:flex;gap:6px;align-items:flex-start;margin-bottom:3px;}
-.comp-icon{width:13px;height:13px;flex-shrink:0;margin-top:1px;}
-.comp-text{font-size:0.58em;color:#555;line-height:1.4;}
-.builds-on{display:flex;align-items:center;justify-content:center;gap:6px;font-size:0.6em;color:#888;padding:2px 0;}
-.builds-tag{background:#1D9E75;color:#fff;border-radius:4px;padding:1px 7px;font-size:0.95em;font-weight:600;}
+section.slide {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto 48px;
+  padding: 26px 28px 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.10);
+  position: relative;
+  overflow: visible;
+}
+
+/* ══════════════════════════════════════════
+   SLIDES 1 & 2 — Shared pipeline styles
+   (nerf_pipelines_image_flow + 2dgs_3dgs_pipeline_flow)
+══════════════════════════════════════════ */
+section.slide:nth-of-type(1) .section-title,
+section.slide:nth-of-type(2) .section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #c0392b;
+  margin: 18px 0 8px 10px;
+}
+
+section.slide:nth-of-type(1) .pipeline,
+section.slide:nth-of-type(2) .pipeline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 0 10px 10px;
+}
+
+section.slide:nth-of-type(1) .stage,
+section.slide:nth-of-type(2) .stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+section.slide:nth-of-type(1) .label-top,
+section.slide:nth-of-type(2) .label-top {
+  font-size: 11px;
+  font-weight: 500;
+  color: #222;
+  text-align: center;
+  height: 28px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+section.slide:nth-of-type(1) .icon-box,
+section.slide:nth-of-type(2) .icon-box {
+  width: 90px;
+  height: 80px;
+}
+
+section.slide:nth-of-type(1) .label-bot,
+section.slide:nth-of-type(2) .label-bot {
+  font-size: 10px;
+  color: #555;
+  text-align: center;
+  margin-top: 6px;
+  height: 30px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  line-height: 1.3;
+}
+
+section.slide:nth-of-type(1) .arrow,
+section.slide:nth-of-type(2) .arrow {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+
+section.slide:nth-of-type(1) .divider,
+section.slide:nth-of-type(2) .divider {
+  border: none;
+  border-top: 1px dashed #ccc;
+  margin: 8px 10px;
+}
+
+/* Slide 1 specifics */
+section.slide:nth-of-type(1) .stage        { width: 120px; }
+section.slide:nth-of-type(1) .arrow svg    { width: 36px; height: 20px; }
+section.slide:nth-of-type(1) .badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-top: 3px;
+}
+section.slide:nth-of-type(1) .badge-ngp   { background: #fff3cd; color: #7d5a00; border: 1px solid #f0c040; }
+section.slide:nth-of-type(1) .badge-nrf   { background: #e1f0ff; color: #1a4f8a; border: 1px solid #7ab8f5; }
+
+/* Slide 2 specifics */
+section.slide:nth-of-type(2) .stage        { width: 112px; }
+section.slide:nth-of-type(2) .arrow svg    { width: 30px; height: 20px; }
+
+/* ══════════════════════════════════════════
+   SLIDE 3 — Pose Estimation via GLOMAP
+══════════════════════════════════════════ */
+section.slide:nth-of-type(3) .title {
+  color: #c0392b;
+  font-size: 1.55em;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+section.slide:nth-of-type(3) .red-bar {
+  height: 4px;
+  background: #c0392b;
+  margin-top: 16px;
+}
+section.slide:nth-of-type(3) .minimap {
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+section.slide:nth-of-type(3) .mbox {
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  padding: 3px 6px;
+  font-size: 6.5px;
+  color: #666;
+  text-align: center;
+  background: #fff;
+  line-height: 1.3;
+  min-width: 52px;
+}
+section.slide:nth-of-type(3) .mbox.active {
+  border: 2px solid #c0392b;
+  color: #c0392b;
+  font-weight: 700;
+}
+section.slide:nth-of-type(3) .marr          { font-size: 8px; color: #bbb; }
+section.slide:nth-of-type(3) .main          { display: flex; gap: 24px; align-items: flex-start; }
+section.slide:nth-of-type(3) .left          { flex: 1.5; display: flex; flex-direction: column; }
+section.slide:nth-of-type(3) .sec-label {
+  font-size: 0.72em;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10px;
+  letter-spacing: 0.01em;
+}
+section.slide:nth-of-type(3) .pipe {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 0;
+}
+section.slide:nth-of-type(3) .step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+}
+section.slide:nth-of-type(3) .step-top {
+  font-size: 0.6em;
+  color: #444;
+  text-align: center;
+  min-height: 26px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 5px;
+  line-height: 1.3;
+}
+section.slide:nth-of-type(3) .icon-wrap {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+section.slide:nth-of-type(3) .step-bot {
+  font-size: 0.56em;
+  color: #888;
+  text-align: center;
+  min-height: 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: 4px;
+  line-height: 1.3;
+}
+section.slide:nth-of-type(3) .arr {
+  display: flex;
+  align-items: center;
+  padding-bottom: 26px;
+}
+section.slide:nth-of-type(3) .sec-caption {
+  font-size: 0.6em;
+  color: #666;
+  font-style: italic;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+section.slide:nth-of-type(3) .right {
+  width: 240px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+section.slide:nth-of-type(3) .comp-title {
+  font-size: 0.7em;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 2px;
+}
+section.slide:nth-of-type(3) .comp-box {
+  border-radius: 12px;
+  padding: 11px 13px;
+  border: 1.5px solid #ddd;
+}
+section.slide:nth-of-type(3) .comp-box.colmap  { border-color: #aaa; background: #fafafa; }
+section.slide:nth-of-type(3) .comp-box.glomap  { border-color: #1D9E75; background: #f4fcf8; }
+section.slide:nth-of-type(3) .comp-box-title {
+  font-size: 0.68em;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 5px;
+}
+section.slide:nth-of-type(3) .comp-box.glomap .comp-box-title { color: #0F6E56; }
+section.slide:nth-of-type(3) .comp-row {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  margin-bottom: 3px;
+}
+section.slide:nth-of-type(3) .comp-icon { width: 13px; height: 13px; flex-shrink: 0; margin-top: 1px; }
+section.slide:nth-of-type(3) .comp-text { font-size: 0.58em; color: #555; line-height: 1.4; }
+section.slide:nth-of-type(3) .builds-on {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.6em;
+  color: #888;
+  padding: 2px 0;
+}
+section.slide:nth-of-type(3) .builds-tag {
+  background: #1D9E75;
+  color: #fff;
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-size: 0.95em;
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════
+   SLIDE 4 — Coordinate System (s3 only)
+══════════════════════════════════════════ */
+section.slide:nth-of-type(4) {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+section.slide:nth-of-type(4) .main-title {
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  color: #111;
+  margin-bottom: 24px;
+  letter-spacing: 0.01em;
+}
+section.slide:nth-of-type(4) .axes-label-red   { font-family: Georgia, serif; font-size: 16px; font-weight: 700; fill: #c8102e; }
+section.slide:nth-of-type(4) .axes-label-green { font-family: Georgia, serif; font-size: 16px; font-weight: 700; fill: #1a8c3c; }
+section.slide:nth-of-type(4) .axes-label-blue  { font-family: Georgia, serif; font-size: 16px; font-weight: 700; fill: #1560a8; }
+section.slide:nth-of-type(4) .axes-label-gray  { font-family: Georgia, serif; font-size: 13px; font-weight: 700; fill: #333; }
+
+section.slide:nth-of-type(4) .info-panel { line-height: 1.9; }
+section.slide:nth-of-type(4) .info-panel .sys-title { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+section.slide:nth-of-type(4) .info-panel .sub       { font-size: 13px; font-weight: 700; color: #444; margin-bottom: 10px; }
+section.slide:nth-of-type(4) .info-panel .row       { font-size: 14px; font-weight: 700; color: #111; }
+section.slide:nth-of-type(4) .info-panel .red        { color: #c8102e; }
+section.slide:nth-of-type(4) .info-panel .green      { color: #1a8c3c; }
+section.slide:nth-of-type(4) .info-panel .blue       { color: #1560a8; }
+
+section.slide:nth-of-type(4) .conv-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+section.slide:nth-of-type(4) .conv-formula {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+  white-space: nowrap;
+}
+section.slide:nth-of-type(4) .map-table {
+  border-collapse: collapse;
+  font-size: 13px;
+  width: 100%;
+}
+section.slide:nth-of-type(4) .map-table th {
+  font-weight: 700;
+  color: #111;
+  padding: 5px 8px;
+  border-bottom: 2px solid #bbb;
+  text-align: center;
+}
+section.slide:nth-of-type(4) .map-table td {
+  padding: 4px 8px;
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 0.5px solid #e0e0e0;
+}
+section.slide:nth-of-type(4) .map-table td.red   { color: #c8102e; }
+section.slide:nth-of-type(4) .map-table td.green { color: #1a8c3c; }
+section.slide:nth-of-type(4) .map-table td.blue  { color: #1560a8; }
+section.slide:nth-of-type(4) .map-table td.dark  { color: #111; }
+section.slide:nth-of-type(4) .map-table td.arr   { color: #555; font-size: 15px; }
+
+/* Dashed-flow animation (slide 4 coordinate arrows) */
+@keyframes dashFlow {
+  from { stroke-dashoffset: 28; }
+  to   { stroke-dashoffset: 0; }
+}
+.dash-anim {
+  stroke-dasharray: 10 6;
+  animation: dashFlow 0.7s linear infinite;
+}
+
 </style>
+</head>
+<body>
 
-<div class="slide">
+<!-- ═══════════════════════════════════════════════════
+     SLIDE 1 — NeRF Pipelines: Instant NGP + Nerfacto
+═══════════════════════════════════════════════════ -->
+<section class="slide">
+
+  <!-- ══════ INSTANT NGP ══════ -->
+  <div class="section-title">Instant NGP</div>
+  <div class="pipeline">
+
+    <!-- 1. Camera -->
+    <div class="stage">
+      <div class="label-top">Camera rays</div>
+      <svg class="icon-box" viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="28" width="46" height="34" rx="5" fill="#555" stroke="#333" stroke-width="1"/>
+        <rect x="20" y="22" width="18" height="8" rx="2" fill="#555" stroke="#333" stroke-width="1"/>
+        <circle cx="33" cy="45" r="10" fill="#888" stroke="#333" stroke-width="1"/>
+        <circle cx="33" cy="45" r="6" fill="#aaa" stroke="#666" stroke-width="0.8"/>
+        <circle cx="33" cy="45" r="3" fill="#ccc"/>
+        <line x1="56" y1="40" x2="82" y2="20" stroke="#4a90d9" stroke-width="1.2" stroke-dasharray="3,2"/>
+        <line x1="56" y1="45" x2="82" y2="45" stroke="#4a90d9" stroke-width="1.2" stroke-dasharray="3,2"/>
+        <line x1="56" y1="50" x2="82" y2="68" stroke="#4a90d9" stroke-width="1.2" stroke-dasharray="3,2"/>
+        <circle cx="65" cy="29" r="2" fill="#e8b84b"/>
+        <circle cx="73" cy="24" r="2" fill="#e8b84b"/>
+        <circle cx="65" cy="45" r="2" fill="#e8b84b"/>
+        <circle cx="73" cy="45" r="2" fill="#e8b84b"/>
+        <circle cx="65" cy="61" r="2" fill="#e8b84b"/>
+        <circle cx="73" cy="64" r="2" fill="#e8b84b"/>
+      </svg>
+      <div class="label-bot">Sample points<br>along each ray</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 36 20"><path d="M2 10 L28 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s1-arr1)"/><defs><marker id="s1-arr1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 2. Hash grid -->
+    <div class="stage">
+      <div class="label-top">Multi-res hash grid</div>
+      <svg class="icon-box" viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg">
+        <g opacity="0.5">
+          <rect x="8" y="42" width="36" height="32" rx="2" fill="#fde68a" stroke="#d97706" stroke-width="0.8"/>
+          <line x1="20" y1="42" x2="20" y2="74" stroke="#d97706" stroke-width="0.5"/>
+          <line x1="32" y1="42" x2="32" y2="74" stroke="#d97706" stroke-width="0.5"/>
+          <line x1="8" y1="53" x2="44" y2="53" stroke="#d97706" stroke-width="0.5"/>
+          <line x1="8" y1="63" x2="44" y2="63" stroke="#d97706" stroke-width="0.5"/>
+        </g>
+        <g opacity="0.75">
+          <rect x="18" y="26" width="36" height="32" rx="2" fill="#fcd34d" stroke="#b45309" stroke-width="0.8"/>
+          <line x1="27" y1="26" x2="27" y2="58" stroke="#b45309" stroke-width="0.5"/>
+          <line x1="36" y1="26" x2="36" y2="58" stroke="#b45309" stroke-width="0.5"/>
+          <line x1="45" y1="26" x2="45" y2="58" stroke="#b45309" stroke-width="0.5"/>
+          <line x1="18" y1="35" x2="54" y2="35" stroke="#b45309" stroke-width="0.5"/>
+          <line x1="18" y1="44" x2="54" y2="44" stroke="#b45309" stroke-width="0.5"/>
+          <line x1="18" y1="53" x2="54" y2="53" stroke="#b45309" stroke-width="0.5"/>
+        </g>
+        <rect x="30" y="10" width="52" height="40" rx="2" fill="#fef3c7" stroke="#92400e" stroke-width="1"/>
+        <line x1="39" y1="10" x2="39" y2="50" stroke="#92400e" stroke-width="0.5"/>
+        <line x1="48" y1="10" x2="48" y2="50" stroke="#92400e" stroke-width="0.5"/>
+        <line x1="57" y1="10" x2="57" y2="50" stroke="#92400e" stroke-width="0.5"/>
+        <line x1="66" y1="10" x2="66" y2="50" stroke="#92400e" stroke-width="0.5"/>
+        <line x1="75" y1="10" x2="75" y2="50" stroke="#92400e" stroke-width="0.5"/>
+        <line x1="30" y1="18" x2="82" y2="18" stroke="#92400e" stroke-width="0.5"/>
+        <line x1="30" y1="26" x2="82" y2="26" stroke="#92400e" stroke-width="0.5"/>
+        <line x1="30" y1="34" x2="82" y2="34" stroke="#92400e" stroke-width="0.5"/>
+        <line x1="30" y1="42" x2="82" y2="42" stroke="#92400e" stroke-width="0.5"/>
+        <rect x="48" y="26" width="9" height="8" fill="#f59e0b" opacity="0.7"/>
+        <rect x="39" y="10" width="9" height="8" fill="#f59e0b" opacity="0.5"/>
+      </svg>
+      <div class="label-bot">16-level hash<br>lookup (x,y,z)</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 36 20"><path d="M2 10 L28 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s1-arr2)"/><defs><marker id="s1-arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 3. Tiny MLP -->
+    <div class="stage">
+      <div class="label-top">Tiny MLP</div>
+      <svg class="icon-box" viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="24" r="6" fill="#a5b4fc" stroke="#6366f1" stroke-width="1"/>
+        <circle cx="14" cy="40" r="6" fill="#a5b4fc" stroke="#6366f1" stroke-width="1"/>
+        <circle cx="14" cy="56" r="6" fill="#a5b4fc" stroke="#6366f1" stroke-width="1"/>
+        <circle cx="38" cy="20" r="6" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="38" cy="36" r="6" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="38" cy="52" r="6" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="38" cy="68" r="6" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="62" cy="28" r="6" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="62" cy="44" r="6" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="62" cy="60" r="6" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="80" cy="36" r="6" fill="#c4b5fd" stroke="#7c3aed" stroke-width="1"/>
+        <circle cx="80" cy="52" r="6" fill="#c4b5fd" stroke="#7c3aed" stroke-width="1"/>
+        <line x1="20" y1="24" x2="32" y2="20" stroke="#9ca3af" stroke-width="0.5"/>
+        <line x1="20" y1="24" x2="32" y2="36" stroke="#9ca3af" stroke-width="0.5"/>
+        <line x1="20" y1="40" x2="32" y2="36" stroke="#9ca3af" stroke-width="0.5"/>
+        <line x1="20" y1="40" x2="32" y2="52" stroke="#9ca3af" stroke-width="0.5"/>
+        <line x1="20" y1="56" x2="32" y2="52" stroke="#9ca3af" stroke-width="0.5"/>
+        <line x1="20" y1="56" x2="32" y2="68" stroke="#9ca3af" stroke-width="0.5"/>
+        <line x1="44" y1="20" x2="56" y2="28" stroke="#9ca3af" stroke-width="0.5"/>
+        <line x1="44" y1="36" x2="56" y2="28" stroke="#9ca3af" stroke-width="0.5"/>
+        <line x1="44" y1="36" x2="56" y2="44" stroke="#9ca3af" stroke-width="0.5"/>
+        <line x1="44" y1="52" x2="56" y2="44" stroke="#9ca3af" stroke-width="0.5"/>
+        <line x1="44" y1="52" x2="56" y2="60" stroke="#9ca3af" stroke-width="0.5"/>
+        <line x1="44" y1="68" x2="56" y2="60" stroke="#9ca3af" stroke-width="0.5"/>
+        <line x1="68" y1="28" x2="74" y2="36" stroke="#9ca3af" stroke-width="0.5"/>
+        <line x1="68" y1="44" x2="74" y2="36" stroke="#9ca3af" stroke-width="0.5"/>
+        <line x1="68" y1="44" x2="74" y2="52" stroke="#9ca3af" stroke-width="0.5"/>
+        <line x1="68" y1="60" x2="74" y2="52" stroke="#9ca3af" stroke-width="0.5"/>
+      </svg>
+      <div class="label-bot">2–4 layers,<br>very fast</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 36 20"><path d="M2 10 L28 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s1-arr3)"/><defs><marker id="s1-arr3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 4. Volume rendering -->
+    <div class="stage">
+      <div class="label-top">Volume rendering</div>
+      <svg class="icon-box" viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="42" cy="42" rx="32" ry="30" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+        <circle cx="30" cy="35" r="4" fill="#93c5fd" opacity="0.5"/>
+        <circle cx="42" cy="28" r="5" fill="#60a5fa" opacity="0.7"/>
+        <circle cx="52" cy="38" r="6" fill="#3b82f6" opacity="0.8"/>
+        <circle cx="36" cy="50" r="5" fill="#60a5fa" opacity="0.6"/>
+        <circle cx="50" cy="52" r="4" fill="#93c5fd" opacity="0.5"/>
+        <circle cx="42" cy="42" r="7" fill="#2563eb" opacity="0.6"/>
+        <path d="M75 25 Q82 42 75 58" stroke="#1d4ed8" stroke-width="1.5" fill="none" stroke-dasharray="3,2" marker-end="url(#s1-arr4)"/>
+        <defs><marker id="s1-arr4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#1d4ed8" stroke-width="1.5"/></marker></defs>
+      </svg>
+      <div class="label-bot">Accumulate RGB<br>+ density → pixel</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 36 20"><path d="M2 10 L28 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s1-arr5)"/><defs><marker id="s1-arr5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 5. Rendered image -->
+    <div class="stage">
+      <div class="label-top">Rendered image</div>
+      <svg class="icon-box" viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="70" height="58" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.2"/>
+        <rect x="10" y="10" width="70" height="28" rx="4" fill="#bfdbfe"/>
+        <rect x="10" y="38" width="70" height="30" rx="0" fill="#bbf7d0"/>
+        <rect x="10" y="62" width="70" height="6" rx="0" fill="#86efac"/>
+        <polygon points="45,18 36,40 54,40" fill="#16a34a" opacity="0.8"/>
+        <polygon points="45,14 38,32 52,32" fill="#22c55e" opacity="0.9"/>
+        <rect x="43" y="40" width="4" height="8" fill="#78350f"/>
+      </svg>
+      <div class="label-bot">3D scene<br>(fast, sharp)</div>
+    </div>
+
+  </div>
+  <p style="font-size:11px;color:#777;margin:2px 14px 6px;font-style:italic;">
+    Hash encoding replaces the large MLP — grid lookups are orders of magnitude faster than network passes.
+  </p>
+
+  <hr class="divider"/>
+
+  <!-- ══════ NERFACTO ══════ -->
+  <div class="section-title">Nerfacto</div>
+  <div class="pipeline">
+
+    <!-- 1. Camera -->
+    <div class="stage">
+      <div class="label-top">Camera rays</div>
+      <svg class="icon-box" viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="28" width="46" height="34" rx="5" fill="#555" stroke="#333" stroke-width="1"/>
+        <rect x="20" y="22" width="18" height="8" rx="2" fill="#555" stroke="#333" stroke-width="1"/>
+        <circle cx="33" cy="45" r="10" fill="#888" stroke="#333" stroke-width="1"/>
+        <circle cx="33" cy="45" r="6" fill="#aaa" stroke="#666" stroke-width="0.8"/>
+        <circle cx="33" cy="45" r="3" fill="#ccc"/>
+        <line x1="56" y1="40" x2="82" y2="20" stroke="#4a90d9" stroke-width="1.2" stroke-dasharray="3,2"/>
+        <line x1="56" y1="45" x2="82" y2="45" stroke="#4a90d9" stroke-width="1.2" stroke-dasharray="3,2"/>
+        <line x1="56" y1="50" x2="82" y2="68" stroke="#4a90d9" stroke-width="1.2" stroke-dasharray="3,2"/>
+        <circle cx="65" cy="29" r="2" fill="#e8b84b"/>
+        <circle cx="73" cy="24" r="2" fill="#e8b84b"/>
+        <circle cx="65" cy="45" r="2" fill="#e8b84b"/>
+        <circle cx="73" cy="45" r="2" fill="#e8b84b"/>
+        <circle cx="65" cy="61" r="2" fill="#e8b84b"/>
+        <circle cx="73" cy="64" r="2" fill="#e8b84b"/>
+      </svg>
+      <div class="label-bot">Rays from<br>multi-image set</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 36 20"><path d="M2 10 L28 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s1-arr6)"/><defs><marker id="s1-arr6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 2. Proposal networks -->
+    <div class="stage">
+      <div class="label-top">Proposal nets ×2</div>
+      <svg class="icon-box" viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg">
+        <line x1="5" y1="40" x2="85" y2="40" stroke="#e5e7eb" stroke-width="1.5"/>
+        <circle cx="18" cy="40" r="3" fill="#f9a8d4" stroke="#db2777" stroke-width="0.8"/>
+        <circle cx="32" cy="40" r="3" fill="#f9a8d4" stroke="#db2777" stroke-width="0.8"/>
+        <circle cx="46" cy="40" r="3" fill="#f9a8d4" stroke="#db2777" stroke-width="0.8"/>
+        <circle cx="60" cy="40" r="3" fill="#f9a8d4" stroke="#db2777" stroke-width="0.8"/>
+        <circle cx="74" cy="40" r="3" fill="#f9a8d4" stroke="#db2777" stroke-width="0.8"/>
+        <rect x="16" y="26" width="4" height="14" fill="#db2777" opacity="0.3"/>
+        <rect x="30" y="20" width="4" height="20" fill="#db2777" opacity="0.6"/>
+        <rect x="44" y="14" width="4" height="26" fill="#db2777" opacity="0.9"/>
+        <rect x="58" y="22" width="4" height="18" fill="#db2777" opacity="0.5"/>
+        <rect x="72" y="30" width="4" height="10" fill="#db2777" opacity="0.3"/>
+        <circle cx="40" cy="55" r="2" fill="#be185d" stroke="#9d174d" stroke-width="0.8"/>
+        <circle cx="44" cy="55" r="2" fill="#be185d" stroke="#9d174d" stroke-width="0.8"/>
+        <circle cx="48" cy="55" r="2" fill="#be185d" stroke="#9d174d" stroke-width="0.8"/>
+        <circle cx="52" cy="55" r="2" fill="#be185d" stroke="#9d174d" stroke-width="0.8"/>
+        <text x="45" y="72" text-anchor="middle" font-size="8" fill="#9d174d">fine samples</text>
+      </svg>
+      <div class="label-bot">Importance<br>sampling guide</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 36 20"><path d="M2 10 L28 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s1-arr7)"/><defs><marker id="s1-arr7" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 3. Hash grid + appearance -->
+    <div class="stage">
+      <div class="label-top">Hash grid + appear.</div>
+      <svg class="icon-box" viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="10" width="42" height="40" rx="2" fill="#fef3c7" stroke="#92400e" stroke-width="0.8"/>
+        <line x1="16" y1="10" x2="16" y2="50" stroke="#92400e" stroke-width="0.4"/>
+        <line x1="26" y1="10" x2="26" y2="50" stroke="#92400e" stroke-width="0.4"/>
+        <line x1="36" y1="10" x2="36" y2="50" stroke="#92400e" stroke-width="0.4"/>
+        <line x1="6" y1="20" x2="48" y2="20" stroke="#92400e" stroke-width="0.4"/>
+        <line x1="6" y1="30" x2="48" y2="30" stroke="#92400e" stroke-width="0.4"/>
+        <line x1="6" y1="40" x2="48" y2="40" stroke="#92400e" stroke-width="0.4"/>
+        <rect x="26" y="20" width="10" height="10" fill="#f59e0b" opacity="0.7"/>
+        <rect x="52" y="10" width="32" height="40" rx="3" fill="#f5f3ff" stroke="#7c3aed" stroke-width="0.8"/>
+        <rect x="55" y="14" width="26" height="7" rx="1" fill="#c4b5fd"/>
+        <rect x="55" y="23" width="26" height="7" rx="1" fill="#f9a8d4"/>
+        <rect x="55" y="32" width="26" height="7" rx="1" fill="#86efac"/>
+        <rect x="55" y="41" width="26" height="7" rx="1" fill="#fcd34d"/>
+        <text x="27" y="60" text-anchor="middle" font-size="7" fill="#92400e">hash</text>
+        <text x="68" y="60" text-anchor="middle" font-size="7" fill="#7c3aed">appear.</text>
+        <text x="50" y="35" text-anchor="middle" font-size="12" fill="#6b7280">+</text>
+      </svg>
+      <div class="label-bot">Per-image lighting<br>conditioning</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 36 20"><path d="M2 10 L28 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s1-arr8)"/><defs><marker id="s1-arr8" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 4. NeRF MLP -->
+    <div class="stage">
+      <div class="label-top">NeRF MLP</div>
+      <svg class="icon-box" viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="10" cy="20" r="5" fill="#a5b4fc" stroke="#6366f1" stroke-width="1"/>
+        <circle cx="10" cy="34" r="5" fill="#a5b4fc" stroke="#6366f1" stroke-width="1"/>
+        <circle cx="10" cy="48" r="5" fill="#a5b4fc" stroke="#6366f1" stroke-width="1"/>
+        <circle cx="10" cy="62" r="5" fill="#a5b4fc" stroke="#6366f1" stroke-width="1"/>
+        <circle cx="30" cy="16" r="5" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="30" cy="30" r="5" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="30" cy="44" r="5" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="30" cy="58" r="5" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="30" cy="70" r="5" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="52" cy="20" r="5" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="52" cy="34" r="5" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="52" cy="48" r="5" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="52" cy="62" r="5" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="72" cy="28" r="5" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="72" cy="42" r="5" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="72" cy="56" r="5" fill="#818cf8" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="86" cy="32" r="5" fill="#c4b5fd" stroke="#7c3aed" stroke-width="1"/>
+        <circle cx="86" cy="48" r="5" fill="#c4b5fd" stroke="#7c3aed" stroke-width="1"/>
+        <line x1="15" y1="20" x2="25" y2="16" stroke="#9ca3af" stroke-width="0.4"/>
+        <line x1="15" y1="34" x2="25" y2="30" stroke="#9ca3af" stroke-width="0.4"/>
+        <line x1="15" y1="48" x2="25" y2="44" stroke="#9ca3af" stroke-width="0.4"/>
+        <line x1="15" y1="62" x2="25" y2="58" stroke="#9ca3af" stroke-width="0.4"/>
+        <line x1="35" y1="30" x2="47" y2="34" stroke="#9ca3af" stroke-width="0.4"/>
+        <line x1="35" y1="44" x2="47" y2="48" stroke="#9ca3af" stroke-width="0.4"/>
+        <line x1="57" y1="34" x2="67" y2="42" stroke="#9ca3af" stroke-width="0.4"/>
+        <line x1="57" y1="48" x2="67" y2="42" stroke="#9ca3af" stroke-width="0.4"/>
+        <line x1="77" y1="28" x2="81" y2="32" stroke="#9ca3af" stroke-width="0.4"/>
+        <line x1="77" y1="42" x2="81" y2="48" stroke="#9ca3af" stroke-width="0.4"/>
+      </svg>
+      <div class="label-bot">Deeper network,<br>RGB + density</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 36 20"><path d="M2 10 L28 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s1-arr9)"/><defs><marker id="s1-arr9" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 5. Rendered image -->
+    <div class="stage">
+      <div class="label-top">Rendered image</div>
+      <svg class="icon-box" viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="70" height="58" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.2"/>
+        <rect x="10" y="10" width="70" height="28" rx="4" fill="#bfdbfe"/>
+        <rect x="10" y="38" width="70" height="30" rx="0" fill="#bbf7d0"/>
+        <rect x="10" y="62" width="70" height="6" rx="0" fill="#86efac"/>
+        <polygon points="45,18 36,40 54,40" fill="#16a34a" opacity="0.8"/>
+        <polygon points="45,14 38,32 52,32" fill="#22c55e" opacity="0.9"/>
+        <rect x="43" y="40" width="4" height="8" fill="#78350f"/>
+        <rect x="62" y="28" width="10" height="10" rx="1" fill="#93c5fd" opacity="0.6"/>
+        <rect x="64" y="24" width="6" height="4" rx="1" fill="#60a5fa" opacity="0.5"/>
+      </svg>
+      <div class="label-bot">3D scene<br>(robust, wild imgs)</div>
+    </div>
+
+  </div>
+  <p style="font-size:11px;color:#777;margin:2px 14px 18px;font-style:italic;">
+    Proposal networks focus samples where matter exists; appearance embeddings handle per-image lighting variation.
+  </p>
+
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SLIDE 2 — Gaussian Splatting: 3DGS + 2DGS
+═══════════════════════════════════════════════════ -->
+<section class="slide">
+
+  <!-- ══════ 3DGS ══════ -->
+  <div class="section-title">3D Gaussian Splatting (3DGS)</div>
+  <div class="pipeline">
+
+    <!-- 1. Point cloud init -->
+    <div class="stage">
+      <div class="label-top">Point cloud init</div>
+      <svg class="icon-box" viewBox="0 0 90 80">
+        <rect x="8" y="8" width="74" height="64" rx="4" fill="none" stroke="#d1d5db" stroke-width="0.8"/>
+        <circle cx="24" cy="22" r="2.5" fill="#6b7280"/>
+        <circle cx="38" cy="16" r="2"   fill="#6b7280"/>
+        <circle cx="52" cy="20" r="2.5" fill="#6b7280"/>
+        <circle cx="66" cy="18" r="2"   fill="#6b7280"/>
+        <circle cx="18" cy="38" r="2"   fill="#6b7280"/>
+        <circle cx="30" cy="34" r="2.5" fill="#4b5563"/>
+        <circle cx="44" cy="30" r="3"   fill="#374151"/>
+        <circle cx="58" cy="32" r="2.5" fill="#4b5563"/>
+        <circle cx="72" cy="28" r="2"   fill="#6b7280"/>
+        <circle cx="22" cy="54" r="2"   fill="#6b7280"/>
+        <circle cx="36" cy="50" r="2.5" fill="#4b5563"/>
+        <circle cx="50" cy="46" r="3"   fill="#374151"/>
+        <circle cx="64" cy="50" r="2.5" fill="#4b5563"/>
+        <circle cx="76" cy="56" r="2"   fill="#6b7280"/>
+        <circle cx="28" cy="66" r="2"   fill="#6b7280"/>
+        <circle cx="46" cy="62" r="2.5" fill="#6b7280"/>
+        <circle cx="62" cy="66" r="2"   fill="#6b7280"/>
+      </svg>
+      <div class="label-bot">SfM sparse<br>point cloud</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 30 20"><path d="M2 10 L22 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s2-a1)"/><defs><marker id="s2-a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 2. 3D Gaussians -->
+    <div class="stage">
+      <div class="label-top">3D Gaussians</div>
+      <svg class="icon-box" viewBox="0 0 90 80">
+        <ellipse cx="58" cy="28" rx="18" ry="11" fill="#c4b5fd" stroke="#7c3aed" stroke-width="0.8" opacity="0.5" transform="rotate(-20,58,28)"/>
+        <ellipse cx="28" cy="55" rx="16" ry="9"  fill="#93c5fd" stroke="#3b82f6" stroke-width="0.8" opacity="0.5" transform="rotate(15,28,55)"/>
+        <ellipse cx="50" cy="52" rx="20" ry="10" fill="#6ee7b7" stroke="#059669" stroke-width="0.8" opacity="0.65" transform="rotate(-10,50,52)"/>
+        <ellipse cx="38" cy="34" rx="22" ry="13" fill="#fcd34d" stroke="#d97706" stroke-width="1"   opacity="0.75" transform="rotate(8,38,34)"/>
+        <circle cx="38" cy="34" r="2.5" fill="#92400e"/>
+        <circle cx="58" cy="28" r="2"   fill="#5b21b6"/>
+        <circle cx="28" cy="55" r="2"   fill="#1e40af"/>
+        <circle cx="50" cy="52" r="2"   fill="#065f46"/>
+      </svg>
+      <div class="label-bot">Ellipsoidal volumes<br>pos, scale, rot, α</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 30 20"><path d="M2 10 L22 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s2-a2)"/><defs><marker id="s2-a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 3. SH color -->
+    <div class="stage">
+      <div class="label-top">Spherical harmonics</div>
+      <svg class="icon-box" viewBox="0 0 90 80">
+        <circle cx="45" cy="40" r="26" fill="#f0f9ff" stroke="#0284c7" stroke-width="0.8"/>
+        <path d="M45,40 Q30,18 45,14 Q60,18 45,40Z" fill="#fbbf24" opacity="0.7"/>
+        <path d="M45,40 Q68,28 72,42 Q68,56 45,40Z" fill="#f87171" opacity="0.6"/>
+        <path d="M45,40 Q60,62 45,66 Q30,62 45,40Z" fill="#34d399" opacity="0.7"/>
+        <path d="M45,40 Q22,56 18,42 Q22,28 45,40Z" fill="#818cf8" opacity="0.6"/>
+        <ellipse cx="45" cy="40" rx="26" ry="8" fill="none" stroke="#0284c7" stroke-width="0.6" opacity="0.4"/>
+        <circle cx="45" cy="40" r="3" fill="#0369a1"/>
+        <text x="45" y="12" text-anchor="middle" font-size="7" fill="#92400e">+Y</text>
+        <text x="76" y="44" text-anchor="start"  font-size="7" fill="#991b1b">+X</text>
+        <text x="45" y="74" text-anchor="middle" font-size="7" fill="#065f46">−Y</text>
+      </svg>
+      <div class="label-bot">View-dependent<br>color (SH)</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 30 20"><path d="M2 10 L22 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s2-a3)"/><defs><marker id="s2-a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 4. Splatting / rasterize -->
+    <div class="stage">
+      <div class="label-top">3D → 2D splatting</div>
+      <svg class="icon-box" viewBox="0 0 90 80">
+        <polygon points="10,25 40,12 70,25 40,38" fill="none" stroke="#9ca3af" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <line x1="10" y1="25" x2="10" y2="58" stroke="#9ca3af" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <line x1="40" y1="38" x2="40" y2="70" stroke="#9ca3af" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <line x1="70" y1="25" x2="70" y2="58" stroke="#9ca3af" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <polygon points="10,58 40,70 70,58 40,46" fill="#f8fafc" stroke="#9ca3af" stroke-width="0.8"/>
+        <ellipse cx="30" cy="57" rx="11" ry="5" fill="#fcd34d" stroke="#d97706" stroke-width="0.8" opacity="0.8"/>
+        <ellipse cx="50" cy="60" rx="13" ry="5" fill="#c4b5fd" stroke="#7c3aed" stroke-width="0.8" opacity="0.75"/>
+        <ellipse cx="40" cy="53" rx="9"  ry="4" fill="#6ee7b7" stroke="#059669" stroke-width="0.8" opacity="0.8"/>
+        <line x1="38" y1="28" x2="38" y2="46" stroke="#374151" stroke-width="0.8" stroke-dasharray="2,2" marker-end="url(#s2-a3b)"/>
+        <defs><marker id="s2-a3b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#374151" stroke-width="1.5"/></marker></defs>
+      </svg>
+      <div class="label-bot">Project ellipsoids<br>to screen plane</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 30 20"><path d="M2 10 L22 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s2-a4)"/><defs><marker id="s2-a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 5. Alpha blend -->
+    <div class="stage">
+      <div class="label-top">Alpha blending</div>
+      <svg class="icon-box" viewBox="0 0 90 80">
+        <ellipse cx="45" cy="60" rx="30" ry="10" fill="#fcd34d" stroke="#d97706" stroke-width="0.8" opacity="0.9"/>
+        <ellipse cx="45" cy="48" rx="30" ry="10" fill="#c4b5fd" stroke="#7c3aed" stroke-width="0.8" opacity="0.8"/>
+        <ellipse cx="45" cy="36" rx="30" ry="10" fill="#6ee7b7" stroke="#059669" stroke-width="0.8" opacity="0.75"/>
+        <ellipse cx="45" cy="24" rx="30" ry="10" fill="#93c5fd" stroke="#3b82f6" stroke-width="0.8" opacity="0.7"/>
+        <line x1="78" y1="24" x2="78" y2="60" stroke="#374151" stroke-width="1" marker-end="url(#s2-a4b)"/>
+        <defs><marker id="s2-a4b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#374151" stroke-width="1.5"/></marker></defs>
+        <text x="82" y="44" font-size="7" fill="#374151">sort</text>
+      </svg>
+      <div class="label-bot">Sort + blend<br>front to back</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 30 20"><path d="M2 10 L22 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s2-a5)"/><defs><marker id="s2-a5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 6. Rendered image -->
+    <div class="stage">
+      <div class="label-top">Rendered image</div>
+      <svg class="icon-box" viewBox="0 0 90 80">
+        <rect x="10" y="10" width="70" height="58" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.2"/>
+        <rect x="10" y="10" width="70" height="26" rx="4" fill="#bfdbfe"/>
+        <rect x="10" y="36" width="70" height="32" rx="0" fill="#bbf7d0"/>
+        <rect x="10" y="62" width="70" height="6" rx="0" fill="#86efac"/>
+        <polygon points="45,18 36,38 54,38" fill="#16a34a" opacity="0.85"/>
+        <polygon points="45,14 38,30 52,30" fill="#22c55e" opacity="0.9"/>
+        <rect x="43" y="38" width="4" height="8" fill="#78350f"/>
+        <rect x="62" y="26" width="10" height="10" rx="1" fill="#93c5fd" opacity="0.7"/>
+      </svg>
+      <div class="label-bot">Real-time render<br>no ray marching</div>
+    </div>
+
+  </div>
+  <p style="font-size:11px;color:#777;margin:2px 14px 6px;font-style:italic;">
+    3D Gaussians are 3D ellipsoidal volumes — view-dependent color via spherical harmonics, rendered by projecting and alpha-blending sorted splats.
+  </p>
+
+  <hr class="divider"/>
+
+  <!-- ══════ 2DGS ══════ -->
+  <div class="section-title">2D Gaussian Splatting (2DGS)</div>
+  <div class="pipeline">
+
+    <!-- 1. Point cloud init -->
+    <div class="stage">
+      <div class="label-top">Point cloud init</div>
+      <svg class="icon-box" viewBox="0 0 90 80">
+        <rect x="8" y="8" width="74" height="64" rx="4" fill="none" stroke="#d1d5db" stroke-width="0.8"/>
+        <circle cx="24" cy="22" r="2.5" fill="#6b7280"/>
+        <circle cx="38" cy="16" r="2"   fill="#6b7280"/>
+        <circle cx="52" cy="20" r="2.5" fill="#6b7280"/>
+        <circle cx="66" cy="18" r="2"   fill="#6b7280"/>
+        <circle cx="18" cy="38" r="2"   fill="#6b7280"/>
+        <circle cx="30" cy="34" r="2.5" fill="#4b5563"/>
+        <circle cx="44" cy="30" r="3"   fill="#374151"/>
+        <circle cx="58" cy="32" r="2.5" fill="#4b5563"/>
+        <circle cx="72" cy="28" r="2"   fill="#6b7280"/>
+        <circle cx="22" cy="54" r="2"   fill="#6b7280"/>
+        <circle cx="36" cy="50" r="2.5" fill="#4b5563"/>
+        <circle cx="50" cy="46" r="3"   fill="#374151"/>
+        <circle cx="64" cy="50" r="2.5" fill="#4b5563"/>
+        <circle cx="76" cy="56" r="2"   fill="#6b7280"/>
+        <circle cx="28" cy="66" r="2"   fill="#6b7280"/>
+        <circle cx="46" cy="62" r="2.5" fill="#6b7280"/>
+        <circle cx="62" cy="66" r="2"   fill="#6b7280"/>
+      </svg>
+      <div class="label-bot">SfM sparse<br>point cloud</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 30 20"><path d="M2 10 L22 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s2-b1)"/><defs><marker id="s2-b1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 2. 2D flat discs -->
+    <div class="stage">
+      <div class="label-top">2D Gaussians</div>
+      <svg class="icon-box" viewBox="0 0 90 80">
+        <ellipse cx="44" cy="48" rx="26" ry="6" fill="#fda4af" stroke="#e11d48" stroke-width="1" opacity="0.85" transform="rotate(-15,44,48)"/>
+        <ellipse cx="38" cy="28" rx="22" ry="5" fill="#86efac" stroke="#16a34a" stroke-width="1" opacity="0.8" transform="rotate(20,38,28)"/>
+        <ellipse cx="58" cy="38" rx="18" ry="4" fill="#93c5fd" stroke="#3b82f6" stroke-width="1" opacity="0.8" transform="rotate(-30,58,38)"/>
+        <line x1="44" y1="44" x2="44" y2="22" stroke="#e11d48" stroke-width="1" stroke-dasharray="2,2" marker-end="url(#s2-norm1)"/>
+        <line x1="38" y1="25" x2="52" y2="10" stroke="#16a34a" stroke-width="1" stroke-dasharray="2,2" marker-end="url(#s2-norm2)"/>
+        <defs>
+          <marker id="s2-norm1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#e11d48" stroke-width="1.5"/></marker>
+          <marker id="s2-norm2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#16a34a" stroke-width="1.5"/></marker>
+        </defs>
+        <text x="72" y="62" font-size="7" fill="#be123c">flat</text>
+      </svg>
+      <div class="label-bot">Flat disc primitives<br>with surface normal</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 30 20"><path d="M2 10 L22 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s2-b2)"/><defs><marker id="s2-b2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 3. Ray-splat intersection -->
+    <div class="stage">
+      <div class="label-top">Ray-splat intersect</div>
+      <svg class="icon-box" viewBox="0 0 90 80">
+        <rect x="4" y="32" width="18" height="14" rx="3" fill="#555" stroke="#333" stroke-width="0.8"/>
+        <circle cx="13" cy="39" r="5" fill="#888" stroke="#333" stroke-width="0.7"/>
+        <line x1="22" y1="39" x2="78" y2="39" stroke="#4a90d9" stroke-width="1.2" stroke-dasharray="3,2" marker-end="url(#s2-b2b)"/>
+        <defs><marker id="s2-b2b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#4a90d9" stroke-width="1.5"/></marker></defs>
+        <ellipse cx="58" cy="39" rx="4" ry="18" fill="#fda4af" stroke="#e11d48" stroke-width="1" opacity="0.85" transform="rotate(25,58,39)"/>
+        <circle cx="58" cy="39" r="3.5" fill="#fbbf24" stroke="#d97706" stroke-width="1"/>
+        <line x1="58" y1="30" x2="58" y2="14" stroke="#e11d48" stroke-width="1" stroke-dasharray="2,2"/>
+        <text x="60" y="13" font-size="7" fill="#be123c">n</text>
+        <text x="45" y="70" text-anchor="middle" font-size="7.5" fill="#374151">u, v intersection</text>
+      </svg>
+      <div class="label-bot">Ray hits disc,<br>eval in local UV</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 30 20"><path d="M2 10 L22 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s2-b3)"/><defs><marker id="s2-b3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 4. depth / normal -->
+    <div class="stage">
+      <div class="label-top">Depth + normal map</div>
+      <svg class="icon-box" viewBox="0 0 90 80">
+        <defs>
+          <linearGradient id="s2-depthgrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#1e3a5f"/>
+            <stop offset="100%" stop-color="#bfdbfe"/>
+          </linearGradient>
+        </defs>
+        <rect x="8" y="8" width="34" height="28" rx="3" fill="url(#s2-depthgrad)" stroke="#3b82f6" stroke-width="0.8"/>
+        <text x="25" y="26" text-anchor="middle" font-size="7" fill="#fff">depth</text>
+        <rect x="48" y="8" width="34" height="28" rx="3" fill="#f0fdf4" stroke="#16a34a" stroke-width="0.8"/>
+        <rect x="48" y="8"  width="11" height="28" rx="3" fill="#f87171" opacity="0.7"/>
+        <rect x="59" y="8"  width="11" height="28" fill="#86efac" opacity="0.7"/>
+        <rect x="70" y="8"  width="12" height="28" rx="3" fill="#93c5fd" opacity="0.7"/>
+        <text x="65" y="26" text-anchor="middle" font-size="7" fill="#374151">normal</text>
+        <line x1="45" y1="22" x2="47" y2="22" stroke="#374151" stroke-width="0.8"/>
+        <rect x="8" y="46" width="74" height="24" rx="3" fill="#fef3c7" stroke="#d97706" stroke-width="0.8"/>
+        <text x="45" y="56" text-anchor="middle" font-size="7.5" fill="#92400e" font-weight="500">depth distortion loss</text>
+        <text x="45" y="66" text-anchor="middle" font-size="7" fill="#92400e">+ normal consistency</text>
+      </svg>
+      <div class="label-bot">Geometric<br>regularization</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 30 20"><path d="M2 10 L22 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s2-b4)"/><defs><marker id="s2-b4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 5. Alpha blend -->
+    <div class="stage">
+      <div class="label-top">Alpha blending</div>
+      <svg class="icon-box" viewBox="0 0 90 80">
+        <rect x="12" y="56" width="66" height="8"  rx="2" fill="#fda4af" stroke="#e11d48" stroke-width="0.8" opacity="0.85"/>
+        <rect x="12" y="46" width="66" height="8"  rx="2" fill="#86efac" stroke="#16a34a" stroke-width="0.8" opacity="0.8" transform="rotate(-2,45,50)"/>
+        <rect x="12" y="36" width="66" height="8"  rx="2" fill="#93c5fd" stroke="#3b82f6" stroke-width="0.8" opacity="0.75" transform="rotate(2,45,40)"/>
+        <rect x="12" y="26" width="66" height="8"  rx="2" fill="#fcd34d" stroke="#d97706" stroke-width="0.8" opacity="0.7"/>
+        <rect x="12" y="16" width="66" height="8"  rx="2" fill="#c4b5fd" stroke="#7c3aed" stroke-width="0.8" opacity="0.65"/>
+        <line x1="80" y1="16" x2="80" y2="56" stroke="#374151" stroke-width="1" marker-end="url(#s2-b4b)"/>
+        <defs><marker id="s2-b4b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#374151" stroke-width="1.5"/></marker></defs>
+        <text x="83" y="38" font-size="7" fill="#374151">sort</text>
+      </svg>
+      <div class="label-bot">Sort + blend<br>flat splats</div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 30 20"><path d="M2 10 L22 10" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#s2-b5)"/><defs><marker id="s2-b5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#888" stroke-width="1.5"/></marker></defs></svg></div>
+
+    <!-- 6. Rendered image -->
+    <div class="stage">
+      <div class="label-top">Rendered image</div>
+      <svg class="icon-box" viewBox="0 0 90 80">
+        <rect x="10" y="10" width="70" height="58" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.2"/>
+        <rect x="10" y="10" width="70" height="26" rx="4" fill="#bfdbfe"/>
+        <rect x="10" y="36" width="70" height="32" rx="0" fill="#bbf7d0"/>
+        <rect x="10" y="62" width="70" height="6"  rx="0" fill="#86efac"/>
+        <polygon points="45,18 36,38 54,38" fill="#16a34a" opacity="0.85"/>
+        <polygon points="45,14 38,30 52,30" fill="#22c55e" opacity="0.9"/>
+        <rect x="43" y="38" width="4" height="8" fill="#78350f"/>
+        <rect x="62" y="26" width="10" height="10" rx="1" fill="#93c5fd" opacity="0.7"/>
+      </svg>
+      <div class="label-bot">Sharp surfaces<br>better geometry</div>
+    </div>
+
+  </div>
+  <p style="font-size:11px;color:#777;margin:2px 14px 18px;font-style:italic;">
+    2D Gaussians are flat discs with surface normals — ray-splat intersection in local UV enables depth distortion and normal consistency losses for superior geometry reconstruction.
+  </p>
+
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SLIDE 3 — Pose Estimation via GLOMAP
+═══════════════════════════════════════════════════ -->
+<section class="slide">
+
   <div class="title">Pose Estimation via GLOMAP</div>
 
   <div class="minimap">
@@ -57,7 +955,7 @@
 
     <!-- LEFT: generalised SfM pipeline -->
     <div class="left">
-      <div class="sec-label">Structure from Motion (SfM)</div>
+      <div class="sec-label">Structure from Motion (SfM) — generalised pipeline</div>
 
       <div class="pipe">
 
@@ -78,7 +976,7 @@
               <rect x="36" y="38" width="14" height="9" rx="1" fill="#fff59d"/>
             </svg>
           </div>
-          <div class="step-bot">2D frames</div>
+          <div class="step-bot">2D frames<br>+ known camera info</div>
         </div>
 
         <div class="arr"><svg width="20" height="14"><path d="M2 7 L14 7 M9 2 L14 7 L9 12" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -136,7 +1034,7 @@
 
         <!-- Step 4: Pose solving -->
         <div class="step">
-          <div class="step-top">Pose estimation<br>+ triangulation</div>
+          <div class="step-top">Pose solving<br>+ optimisation</div>
           <div class="icon-wrap">
             <svg width="64" height="64" viewBox="0 0 64 64">
               <circle cx="32" cy="32" r="18" fill="none" stroke="#e0e0e0" stroke-width="1" stroke-dasharray="3 2"/>
@@ -153,7 +1051,7 @@
               <text x="32" y="62" text-anchor="middle" font-size="7" fill="#888">bundle adjustment</text>
             </svg>
           </div>
-          <div class="step-bot">Recover R, t per<br>camera and minimise reprojection</div>
+          <div class="step-bot">Recover R, t per<br>camera · minimise reprojection</div>
         </div>
 
         <div class="arr"><svg width="20" height="14"><path d="M2 7 L14 7 M9 2 L14 7 L9 12" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -182,11 +1080,11 @@
               <circle cx="55" cy="56" r="2" fill="#888"/>
             </svg>
           </div>
-          <div class="step-bot">Sparse 3D point cloud <br>+ camera poses for scene training</div>
+          <div class="step-bot">3D camera network<br>for scene training</div>
         </div>
 
       </div>
-      <div class="sec-caption">SfM reconstructs camera positions and orientations from overlapping 2D images - output camera poses feed directly into 3D scene training.</div>
+      <div class="sec-caption">SfM reconstructs camera positions and orientations from overlapping 2D images — output camera poses feed directly into 3D scene training.</div>
     </div>
 
     <!-- RIGHT: COLMAP vs GLOMAP -->
@@ -238,4 +1136,136 @@
   </div>
 
   <div class="red-bar"></div>
-</div>
+
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SLIDE 4 — Coordinate System: COLMAP → Unreal Engine (s3 only)
+═══════════════════════════════════════════════════ -->
+<section class="slide">
+
+  <div class="main-title">Coordinate System: COLMAP (OpenGL) → Unreal Engine</div>
+  <div style="display:flex; gap:12px; align-items:flex-start;">
+
+    <!-- LEFT: COLMAP axes -->
+    <div style="flex-shrink:0; width:210px;">
+      <div class="info-panel" style="margin-bottom:4px;">
+        <div class="sys-title red" style="font-size:15px;">COLMAP / OpenGL</div>
+        <div class="sub" style="font-size:12px;">right-handed · meters</div>
+      </div>
+      <svg width="200" height="170" viewBox="0 0 200 170">
+        <defs>
+          <marker id="s4-ah-l" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <line x1="60" y1="130" x2="60" y2="22" stroke="#1a8c3c" stroke-width="3.5" marker-end="url(#s4-ah-l)"/>
+        <text x="67" y="20" class="axes-label-green" style="font-size:14px;">+Y</text>
+        <line x1="60" y1="130" x2="140" y2="68" stroke="#1560a8" stroke-width="3.5" marker-end="url(#s4-ah-l)"/>
+        <text x="146" y="66" class="axes-label-blue" style="font-size:14px;">+Z</text>
+        <line x1="60" y1="130" x2="168" y2="130" stroke="#c8102e" stroke-width="3.5" marker-end="url(#s4-ah-l)"/>
+        <text x="174" y="135" class="axes-label-red" style="font-size:14px;">+X</text>
+        <circle cx="60" cy="130" r="13" fill="white" stroke="#444" stroke-width="2.5"/>
+        <line x1="51" y1="121" x2="69" y2="139" stroke="#444" stroke-width="2.2"/>
+        <line x1="69" y1="121" x2="51" y2="139" stroke="#444" stroke-width="2.2"/>
+        <text x="5" y="152" class="axes-label-gray" style="font-size:11px;">Z fwd</text>
+      </svg>
+    </div>
+
+    <!-- CENTER: arrow + formulas + table -->
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; margin-top:48px;">
+      <div class="conv-formula" style="font-size:13px;">T_UE = M · T_GL · M¹</div>
+      <svg width="210" height="36" viewBox="0 0 210 36">
+        <defs>
+          <marker id="s4-ah-c" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#e08800" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <line x1="4" y1="18" x2="190" y2="18" stroke="#e08800" stroke-width="4" class="dash-anim" marker-end="url(#s4-ah-c)"/>
+      </svg>
+      <div class="conv-formula" style="font-size:13px;">t̂_UE = 100 · t_UE &nbsp;<span style="color:#666;">(m→cm)</span></div>
+
+      <!-- mapping table -->
+      <div style="margin-top:10px; width:100%;">
+        <table class="map-table">
+          <tbody>
+            <tr>
+              <th>forward</th><th>right</th><th>up</th><th>scale</th>
+            </tr>
+            <tr>
+              <td class="blue">−Z</td>
+              <td class="red">+X</td>
+              <td class="green">+Y</td>
+              <td class="dark">m</td>
+            </tr>
+            <tr>
+              <td class="arr">↓</td>
+              <td class="arr">↓</td>
+              <td class="arr">↓</td>
+              <td class="arr">↓</td>
+            </tr>
+            <tr>
+              <td class="red">+X</td>
+              <td class="green">+Y</td>
+              <td class="blue">+Z</td>
+              <td class="dark">cm</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RIGHT: UE axes -->
+    <div style="flex-shrink:0; width:210px;">
+      <div class="info-panel" style="margin-bottom:4px;">
+        <div class="sys-title blue" style="font-size:15px;">Unreal Engine</div>
+        <div class="sub" style="font-size:12px;">left-handed · centimeters</div>
+      </div>
+      <svg width="200" height="170" viewBox="0 0 200 170">
+        <defs>
+          <marker id="s4-ah-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <!-- +Z up (green) -->
+        <line x1="60" y1="130" x2="60" y2="22" stroke="#1a8c3c" stroke-width="3.5" marker-end="url(#s4-ah-r)"/>
+        <text x="67" y="20" class="axes-label-green" style="font-size:14px;">+Z</text>
+        <!-- gray diagonal (out of screen) -->
+        <line x1="60" y1="130" x2="138" y2="68" stroke="#999" stroke-width="2.5" marker-end="url(#s4-ah-r)"/>
+        <!-- +Y right (red) -->
+        <line x1="60" y1="130" x2="168" y2="130" stroke="#c8102e" stroke-width="3.5" marker-end="url(#s4-ah-r)"/>
+        <text x="174" y="135" class="axes-label-red" style="font-size:14px;">+Y</text>
+        <!-- origin dot (out of screen) -->
+        <circle cx="60" cy="130" r="13" fill="#ddeeff" stroke="#1560a8" stroke-width="2.5"/>
+        <circle cx="60" cy="130" r="5" fill="#1560a8"/>
+        <text x="5" y="152" class="axes-label-gray" style="font-size:11px;">+X fwd</text>
+      </svg>
+    </div>
+
+  </div>
+
+  <!-- bottom ref row -->
+  <div style="display:flex; gap:12px; margin-top:8px; border-top:1.5px solid #e0e0e0; padding-top:10px;">
+    <div class="info-panel" style="flex:1; font-size:12px;">
+      <div class="sys-title red" style="font-size:14px;">COLMAP / OpenGL</div>
+      <div class="row" style="font-size:12px;">Forward : −Z <span style="color:#666;">(into screen)</span></div>
+      <div class="row red" style="font-size:12px;">Right &nbsp;&nbsp;&nbsp;: +X →</div>
+      <div class="row green" style="font-size:12px;">Up &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: +Y ↑</div>
+      <div class="row blue" style="font-size:12px;">Out &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: +Z ↗</div>
+      <div class="row" style="font-size:12px;">Scale &nbsp;&nbsp;&nbsp;: meters</div>
+    </div>
+    <div style="flex:0.1; border-left:1.5px solid #ddd;"></div>
+    <div class="info-panel" style="flex:1; font-size:12px;">
+      <div class="sys-title blue" style="font-size:14px;">Unreal Engine</div>
+      <div class="row red" style="font-size:12px;">Forward : +X <span style="color:#666;">(into screen)</span></div>
+      <div class="row green" style="font-size:12px;">Right &nbsp;&nbsp;&nbsp;: +Y →</div>
+      <div class="row blue" style="font-size:12px;">Up &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: +Z ↑</div>
+      <div class="row" style="font-size:12px;">Scale &nbsp;&nbsp;&nbsp;: centimeters</div>
+    </div>
+  </div>
+
+</section>
+
+</body>
+</html>
